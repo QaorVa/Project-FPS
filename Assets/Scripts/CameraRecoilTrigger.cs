@@ -8,6 +8,7 @@ public class CameraRecoilTrigger : MonoBehaviour
     public static CameraRecoilTrigger Instance { get; private set; }
 
     public CinemachineImpulseSource impulseSource;
+    public float shakeIntensity = 1f;
 
     private void Awake()
     {
@@ -23,8 +24,8 @@ public class CameraRecoilTrigger : MonoBehaviour
     }
 
     // Method to trigger the camera shake
-    public void TriggerShake()
+    public void TriggerShake(Vector3 dir)
     {
-        impulseSource.GenerateImpulse();
+        impulseSource.GenerateImpulseWithVelocity(dir * shakeIntensity);
     }
 }

@@ -8,9 +8,28 @@ public class PlayerShoot : MonoBehaviour
     private InputManager inputManager;
     private Camera cam;
 
+    [Header("Shoot Stats")]
     [SerializeField] private float distance = 100f;
     [SerializeField] private int damage = 50;
+    [SerializeField] private float maxAmmo = 6;
+    [SerializeField] private float reloadTime = 2f;
+    [SerializeField] private float fireRate = 0.3f;
+
+    [Header("Effects")]
     [SerializeField] private GameObject bulletHolePrefab;
+    [SerializeField] private Animator gunAnimator;
+    [SerializeField] private ParticleSystem muzzleFlash;
+    [SerializeField] private Vector3 maxRecoil;
+    [SerializeField] private Vector3 minRecoil;
+
+    [Header("Sounds")]
+    [SerializeField] private AudioSource audioSourceShoot;
+    [SerializeField] private AudioSource audioSourceReload;
+
+
+    private float currentAmmo;
+    private bool isReloading;
+    private float fireRateTimer;
 
     // Start is called before the first frame update
     void Start()
@@ -18,20 +37,53 @@ public class PlayerShoot : MonoBehaviour
         cam = GetComponent<PlayerLook>().cam;
         inputManager = GetComponent<InputManager>();
         playerUI = GetComponent<PlayerUI>();
+
+        currentAmmo = maxAmmo;
+        fireRateTimer = 0f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(inputManager.onFoot.Shoot.triggered)
+        if(inputManager.onFoot.Shoot.triggered && fireRateTimer <= 0)
         {
             Shoot();
+        }
+
+        if(inputManager.onFoot.Reload.triggered && currentAmmo < maxAmmo && !isReloading)
+        {
+            StartCoroutine(Reload());
+        }
+
+        if(fireRateTimer > 0)
+        {
+               fireRateTimer -= Time.deltaTime;
         }
     }
 
     public void Shoot()
     {
+        if(isReloading)
+        {
+            return;
+        }
+
+        if(currentAmmo <= 0)
+        {
+            Debug.Log("Out of ammo!");
+            return;
+        }
+
+        
+        audioSourceShoot.Play();
+        muzzleFlash.Play();
+        gunAnimator.Play("Shoot");
+        currentAmmo--;
+        fireRateTimer = fireRate;
+
+        Debug.Log("Ammo: " + currentAmmo + " / " + maxAmmo);
         Ray ray = new Ray(cam.transform.position, cam.transform.forward);
+        CameraRecoilTrigger.Instance.TriggerShake(new Vector3(Random.Range(minRecoil.x,maxRecoil.x), Random.Range(minRecoil.y, maxRecoil.y), Random.Range(minRecoil.z, maxRecoil.z)));
         Debug.DrawRay(ray.origin, ray.direction * distance, Color.red);
         RaycastHit hitInfo;
 
@@ -56,4 +108,17 @@ public class PlayerShoot : MonoBehaviour
         bulletHole.transform.SetParent(hitInfo.collider.transform);
         Destroy(bulletHole, 5f);
     }
+
+    private IEnumerator Reload()
+    {
+        audioSourceReload.Play();
+        gunAnimator.Play("Reload");
+        isReloading = true;
+        Debug.Log("Reloading...");
+        yield return new WaitForSeconds(reloadTime);
+        currentAmmo = maxAmmo;
+        Debug.Log("Reloaded!");
+        isReloading = false;
+    }
+
 }

@@ -7,7 +7,6 @@ public class PlayerLook : MonoBehaviour
 {
     public Camera cam;
     public CinemachineVirtualCamera vcam;
-    public GameObject weapon;
     public float xRotation = 0f;
 
     public float xSensitivity = 30f;
@@ -32,7 +31,6 @@ public class PlayerLook : MonoBehaviour
         targetRotation = Quaternion.Euler(xRotation, 0f, 0f);
 
         vcam.transform.localRotation = targetRotation;
-        weapon.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         transform.Rotate(Vector3.up * (mouseX * Time.deltaTime) * xSensitivity);
     }
 }
