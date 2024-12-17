@@ -86,11 +86,13 @@ public class PlayerShoot : MonoBehaviour
         playerUI.UpdateAmmoCount(currentAmmo, maxAmmo);
         Debug.Log("Ammo: " + currentAmmo + " / " + maxAmmo);
         Ray ray = new Ray(cam.transform.position, cam.transform.forward);
+        int layerMask = ~LayerMask.GetMask("Teleport");
+
         CameraRecoilTrigger.Instance.TriggerShake(new Vector3(Random.Range(minRecoil.x,maxRecoil.x), Random.Range(minRecoil.y, maxRecoil.y), Random.Range(minRecoil.z, maxRecoil.z)));
         Debug.DrawRay(ray.origin, ray.direction * distance, Color.red);
         RaycastHit hitInfo;
 
-        if(Physics.Raycast(ray, out hitInfo, distance))
+        if(Physics.Raycast(ray, out hitInfo, distance, layerMask))
         {
             if(hitInfo.collider.CompareTag("Ground"))
             {
@@ -108,6 +110,18 @@ public class PlayerShoot : MonoBehaviour
                 }
                 
                 playerUI.OnEnemyHit();
+            } else if(hitInfo.collider.CompareTag("Teleportable Object"))
+            {
+                Rigidbody rb = hitInfo.collider.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    Vector3 forceDirection = hitInfo.collider.transform.position - transform.position;
+
+                    forceDirection.Normalize();
+
+                    float forceMagnitude = damage / 3f;
+                    rb.AddForce(forceDirection * forceMagnitude, ForceMode.Impulse);
+                }
             }
         }
     }
