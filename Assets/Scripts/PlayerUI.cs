@@ -11,12 +11,17 @@ public class PlayerUI : MonoBehaviour
 
     [Header("Hitmarker")]
     [SerializeField] private Image hitmarkerImage;
+    [SerializeField] private AudioSource hitmarkerAudio;
     public float fadeDuration = 1f;
+
+    [Header("Ammo Count")]
+    [SerializeField] private TextMeshProUGUI ammoCountText;
+
     private float hitTimer;
     private bool isHit;
     void Start()
     {
-        
+
     }
 
     private void Update()
@@ -30,6 +35,7 @@ public class PlayerUI : MonoBehaviour
                 StartCoroutine(FadeOutHitmarker());
             }
         }
+
     }
 
     public void UpdateText(string promptMessage)
@@ -40,7 +46,7 @@ public class PlayerUI : MonoBehaviour
     public void OnEnemyHit()
     {
         hitmarkerImage.color = new Color(hitmarkerImage.color.r, hitmarkerImage.color.g, hitmarkerImage.color.b, 1f);
-
+        hitmarkerAudio.Play();
         hitTimer = 0f;
         isHit = true;
     }
@@ -61,5 +67,11 @@ public class PlayerUI : MonoBehaviour
         hitmarkerImage.color = new Color(hitmarkerImage.color.r, hitmarkerImage.color.g, hitmarkerImage.color.b, 0f);
 
         isHit = false;
+    }
+
+
+    public void UpdateAmmoCount(int currentAmmo, int maxAmmo)
+    {
+        ammoCountText.text = currentAmmo + "/" + maxAmmo;
     }
 }

@@ -49,7 +49,6 @@ public class PlayerMotor : MonoBehaviour
         {
             forwardVelocity = maxFOVIncrease;
         }
-        Debug.Log("Velocity: " + forwardVelocity);
 
         targetFOV = baseFOV + Mathf.Max(0, forwardVelocity);
 

@@ -11,7 +11,7 @@ public class PlayerShoot : MonoBehaviour
     [Header("Shoot Stats")]
     [SerializeField] private float distance = 100f;
     [SerializeField] private int damage = 50;
-    [SerializeField] private float maxAmmo = 6;
+    [SerializeField] private int maxAmmo = 6;
     [SerializeField] private float reloadTime = 2f;
     [SerializeField] private float fireRate = 0.3f;
 
@@ -27,7 +27,7 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField] private AudioSource audioSourceReload;
 
 
-    private float currentAmmo;
+    private int currentAmmo;
     private bool isReloading;
     private float fireRateTimer;
 
@@ -40,6 +40,9 @@ public class PlayerShoot : MonoBehaviour
 
         currentAmmo = maxAmmo;
         fireRateTimer = 0f;
+
+
+        playerUI.UpdateAmmoCount(currentAmmo, maxAmmo);
     }
 
     // Update is called once per frame
@@ -80,7 +83,7 @@ public class PlayerShoot : MonoBehaviour
         gunAnimator.Play("Shoot");
         currentAmmo--;
         fireRateTimer = fireRate;
-
+        playerUI.UpdateAmmoCount(currentAmmo, maxAmmo);
         Debug.Log("Ammo: " + currentAmmo + " / " + maxAmmo);
         Ray ray = new Ray(cam.transform.position, cam.transform.forward);
         CameraRecoilTrigger.Instance.TriggerShake(new Vector3(Random.Range(minRecoil.x,maxRecoil.x), Random.Range(minRecoil.y, maxRecoil.y), Random.Range(minRecoil.z, maxRecoil.z)));
@@ -96,7 +99,14 @@ public class PlayerShoot : MonoBehaviour
             } else if (hitInfo.collider.GetComponent<IDamageable>() != null)
             {
                 IDamageable damageable = hitInfo.collider.GetComponent<IDamageable>();
-                damageable.TakeDamage(damage);
+                if(hitInfo.collider.CompareTag("Head"))
+                {
+                    damageable.TakeDamage(damage * 2);
+                } else
+                {
+                    damageable.TakeDamage(damage);
+                }
+                
                 playerUI.OnEnemyHit();
             }
         }
@@ -119,6 +129,7 @@ public class PlayerShoot : MonoBehaviour
         currentAmmo = maxAmmo;
         Debug.Log("Reloaded!");
         isReloading = false;
+        playerUI.UpdateAmmoCount(currentAmmo, maxAmmo);
     }
 
 }
