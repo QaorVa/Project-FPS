@@ -101,13 +101,7 @@ public class PlayerShoot : MonoBehaviour
             } else if (hitInfo.collider.GetComponent<IDamageable>() != null)
             {
                 IDamageable damageable = hitInfo.collider.GetComponent<IDamageable>();
-                if(hitInfo.collider.CompareTag("Head"))
-                {
-                    damageable.TakeDamage(damage * 2);
-                } else
-                {
-                    damageable.TakeDamage(damage);
-                }
+                damageable.TakeDamage(damage);
                 
                 playerUI.OnEnemyHit();
             } else if(hitInfo.collider.CompareTag("Teleportable Object"))

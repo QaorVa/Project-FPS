@@ -8,7 +8,6 @@ public class PlayerTeleport : MonoBehaviour
     [SerializeField] private Material teleportMaterialOn;
     [SerializeField] private Material teleportMaterialOff;
     [SerializeField] private LineRenderer lineRenderer;
-    [SerializeField] private float distance = 10f;
     [SerializeField] private float slowMotionFactor = 0.15f;
     [SerializeField] private float delayDuration = 0.3f;
     [SerializeField] private GameObject player;
