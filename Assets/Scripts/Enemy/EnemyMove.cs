@@ -10,13 +10,20 @@ public class EnemyMove : MonoBehaviour
     [SerializeField] private float stoppingDistance;
     [SerializeField] private float hoverHeight;
     [SerializeField] private float hoverHeightOffset;
+    [SerializeField] private float sidewaysSpeed = 3f;
+    [SerializeField] private float minSidewaysTime = 1f;
+    [SerializeField] private float maxSidewaysTime = 3f;
 
     private float currentHoverHeight;
+    private bool isMovingSideways = false;
 
     // Start is called before the first frame update
     void Start()
     {
         target = GameObject.FindGameObjectWithTag("Player").transform;
+
+        currentHoverHeight = hoverHeight + Random.Range(-hoverHeightOffset, hoverHeightOffset);
+        sidewaysSpeed = Random.Range(sidewaysSpeed - 1, sidewaysSpeed + 1);
     }
 
     // Update is called once per frame
@@ -28,7 +35,7 @@ public class EnemyMove : MonoBehaviour
 
     void Hover()
     {
-        currentHoverHeight = hoverHeight + Random.Range(-hoverHeightOffset, hoverHeightOffset);
+        
 
         Ray ray = new Ray(transform.position, -transform.up);
         int layerMask = LayerMask.GetMask("Ground");
@@ -41,7 +48,7 @@ public class EnemyMove : MonoBehaviour
             float desiredYPosition = hitInfo.point.y + currentHoverHeight;
 
             Vector3 currentPosition = transform.position;
-            currentPosition.y = Mathf.Lerp(currentPosition.y, desiredYPosition, Time.deltaTime * moveSpeed);
+            currentPosition.y = Mathf.Lerp(currentPosition.y, desiredYPosition, Time.deltaTime);
 
             transform.position = currentPosition;
         }
@@ -53,5 +60,34 @@ public class EnemyMove : MonoBehaviour
         {
             transform.position = Vector3.MoveTowards(transform.position, target.position, moveSpeed * Time.deltaTime);
         }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+
+        if (other.gameObject.CompareTag("Enemy") && !isMovingSideways)
+        {
+            Debug.Log("Enemy detected, moving sideways");
+            StartCoroutine(MoveSideways());
+        }
+    }
+
+    private IEnumerator MoveSideways()
+    {
+        isMovingSideways = true;
+        float sidewaysTime = Random.Range(minSidewaysTime, maxSidewaysTime);
+        float elapsedTime = 0f;
+
+        Vector3 sidewaysDirection = Vector3.right;
+        if (Random.value > 0.5f) sidewaysDirection = Vector3.left;
+
+        while (elapsedTime < sidewaysTime)
+        {
+            transform.Translate(sidewaysDirection * sidewaysSpeed * Time.deltaTime, Space.World);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        isMovingSideways = false;
     }
 }

@@ -14,9 +14,12 @@ public class ShootFromPoint : MonoBehaviour
 
     [SerializeField] private AudioSource audioSource;
 
+    private Animator animator;
+
     // Start is called before the first frame update
     void Start()
     {
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -32,6 +35,7 @@ public class ShootFromPoint : MonoBehaviour
     {
         if (shotTimer <= 0)
         {
+            animator.Play("Shoot");
             audioSource.Play();
             Instantiate(bulletPrefab, shootPoint.position, shootPoint.rotation);
              shotTimer = startShotTimer;

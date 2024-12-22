@@ -86,7 +86,7 @@ public class PlayerShoot : MonoBehaviour
         playerUI.UpdateAmmoCount(currentAmmo, maxAmmo);
         Debug.Log("Ammo: " + currentAmmo + " / " + maxAmmo);
         Ray ray = new Ray(cam.transform.position, cam.transform.forward);
-        int layerMask = ~LayerMask.GetMask("Teleport");
+        int layerMask = ~LayerMask.GetMask("Shoot Through");
 
         CameraRecoilTrigger.Instance.TriggerShake(new Vector3(Random.Range(minRecoil.x,maxRecoil.x), Random.Range(minRecoil.y, maxRecoil.y), Random.Range(minRecoil.z, maxRecoil.z)));
         Debug.DrawRay(ray.origin, ray.direction * distance, Color.red);

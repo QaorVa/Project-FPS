@@ -27,7 +27,7 @@ public class DamagePlayer : MonoBehaviour
             
             isDestroyed = true;
             Destroy(gameObject);
-        } else if (other.CompareTag("Wall") || other.CompareTag("Ground"))
+        } else if (other.CompareTag("Ground"))
         {
             if(destroyEffect != null && !isDestroyed)
             {

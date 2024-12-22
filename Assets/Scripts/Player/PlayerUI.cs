@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerUI : MonoBehaviour
 {
@@ -16,6 +17,14 @@ public class PlayerUI : MonoBehaviour
 
     [Header("Ammo Count")]
     [SerializeField] private TextMeshProUGUI ammoCountText;
+
+    [Header("Die UI")]
+    [SerializeField] private GameObject deathUI;
+
+    [Header("Win UI")]
+    [SerializeField] private GameObject winUI;
+    [SerializeField] private TextMeshProUGUI winTimeText;
+    [SerializeField] private TextMeshProUGUI winKillsText;
 
     private float hitTimer;
     private bool isHit;
@@ -73,5 +82,31 @@ public class PlayerUI : MonoBehaviour
     public void UpdateAmmoCount(int currentAmmo, int maxAmmo)
     {
         ammoCountText.text = currentAmmo + "/" + maxAmmo;
+    }
+
+    public void ShowDeathUI()
+    {
+        deathUI.SetActive(true);
+    }
+
+    public void restartGame()
+    {
+        GameManager.minutes = 0;
+        GameManager.seconds = 0;
+        GameManager.enemiesKilledCount = 0;
+        SceneManager.LoadScene(0);
+    }
+
+    public void ResetTimescale()
+    {
+        Time.timeScale = 1;
+    }
+
+    public void ShowWinUI()
+    {
+        winUI.SetActive(true);
+        Time.timeScale = 0;
+        winTimeText.text = GameManager.minutes.ToString("D2") + ":" + GameManager.seconds.ToString("D2");
+        winKillsText.text = GameManager.enemiesKilledCount.ToString("D4");
     }
 }
