@@ -330,6 +330,7 @@ GameObject:
   - component: {fileID: 4806581525598908920}
   - component: {fileID: 2629597546442456852}
   - component: {fileID: 8457944640520681018}
+  - component: {fileID: 7711042388785788897}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -386,7 +387,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -404,7 +405,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a39f075163cec364093f0ae52278095a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 7
+  moveSpeed: 9
   target: {fileID: 0}
   stoppingDistance: 10
   hoverHeight: 5
@@ -434,11 +435,32 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 1
+  m_Constraints: 32
+  m_CollisionDetection: 1
+--- !u!65 &7711042388785788897
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 507704844925557048}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.27, y: 1.26, z: 2.4}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &746371470558941419
 GameObject:
   m_ObjectHideFlags: 0
@@ -1837,7 +1859,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 20
+  m_Radius: 40
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &6644681870597451812
 MonoBehaviour:

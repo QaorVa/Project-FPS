@@ -18,6 +18,9 @@ public class PlayerUI : MonoBehaviour
     [Header("Ammo Count")]
     [SerializeField] private TextMeshProUGUI ammoCountText;
 
+    [Header("Health UI")]
+    [SerializeField] private TextMeshProUGUI healthCountText;
+
     [Header("Die UI")]
     [SerializeField] private GameObject deathUI;
 
@@ -82,6 +85,11 @@ public class PlayerUI : MonoBehaviour
     public void UpdateAmmoCount(int currentAmmo, int maxAmmo)
     {
         ammoCountText.text = currentAmmo + "/" + maxAmmo;
+    }
+
+    public void UpdateHealthCount(int currentHealth)
+    {
+        healthCountText.text = currentHealth.ToString();
     }
 
     public void ShowDeathUI()

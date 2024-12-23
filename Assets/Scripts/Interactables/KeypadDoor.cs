@@ -8,10 +8,16 @@ public class KeypadDoor : Interactable
     [SerializeField] private int usageCount = 1;
     private bool isOpen = false;
     private Collider interactCollider;
+
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip doorOpenSound;
+    [SerializeField] private AudioClip doorCloseSound;
+    [SerializeField] private AudioClip interactSound;
     // Start is called before the first frame update
     void Start()
     {
         interactCollider = gameObject.GetComponent<Collider>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -29,6 +35,7 @@ public class KeypadDoor : Interactable
         {
             return;
         }
+        PlaySound(interactSound);
 
         usageCount--;
 
@@ -46,6 +53,7 @@ public class KeypadDoor : Interactable
     public void CloseDoor()
     {
         door.GetComponent<Animator>().Play("Closed");
+        PlaySound(doorCloseSound);
         isOpen = false;
     }
 
@@ -53,7 +61,14 @@ public class KeypadDoor : Interactable
     {
 
         door.GetComponent<Animator>().Play("Opened");
+        PlaySound(doorOpenSound);
         isOpen = true;
         
+    }
+
+    public void PlaySound(AudioClip clip)
+    {
+        audioSource.clip = clip;
+        audioSource.Play();
     }
 }

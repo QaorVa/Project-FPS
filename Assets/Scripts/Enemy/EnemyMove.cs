@@ -16,6 +16,7 @@ public class EnemyMove : MonoBehaviour
 
     private float currentHoverHeight;
     private bool isMovingSideways = false;
+    private Rigidbody rb;
 
     // Start is called before the first frame update
     void Start()
@@ -24,10 +25,12 @@ public class EnemyMove : MonoBehaviour
 
         currentHoverHeight = hoverHeight + Random.Range(-hoverHeightOffset, hoverHeightOffset);
         sidewaysSpeed = Random.Range(sidewaysSpeed - 1, sidewaysSpeed + 1);
+
+        rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         Hover();
         MoveToTarget();
@@ -35,22 +38,18 @@ public class EnemyMove : MonoBehaviour
 
     void Hover()
     {
-        
-
-        Ray ray = new Ray(transform.position, -transform.up);
+        Ray ray = new Ray(new Vector3(transform.position.x + 2f, transform.position.y + 2f, transform.position.z), -transform.up);
         int layerMask = LayerMask.GetMask("Ground");
 
         Debug.DrawRay(ray.origin, ray.direction * 100f, Color.red);
-        RaycastHit hitInfo;
-
-        if (Physics.Raycast(ray, out hitInfo, 100f, layerMask))
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, 100f, layerMask))
         {
             float desiredYPosition = hitInfo.point.y + currentHoverHeight;
 
-            Vector3 currentPosition = transform.position;
-            currentPosition.y = Mathf.Lerp(currentPosition.y, desiredYPosition, Time.deltaTime);
+            Vector3 targetPosition = rb.position;
+            targetPosition.y = Mathf.Lerp(targetPosition.y, desiredYPosition, Time.fixedDeltaTime);
 
-            transform.position = currentPosition;
+            rb.MovePosition(targetPosition);
         }
     }
 
@@ -58,13 +57,15 @@ public class EnemyMove : MonoBehaviour
     {
         if (Vector3.Distance(transform.position, target.position) > stoppingDistance)
         {
-            transform.position = Vector3.MoveTowards(transform.position, target.position, moveSpeed * Time.deltaTime);
+            Vector3 direction = (target.position - rb.position).normalized;
+            Vector3 movement = direction * moveSpeed * Time.fixedDeltaTime;
+
+            rb.MovePosition(rb.position + movement);
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-
         if (other.gameObject.CompareTag("Enemy") && !isMovingSideways)
         {
             Debug.Log("Enemy detected, moving sideways");
@@ -83,7 +84,8 @@ public class EnemyMove : MonoBehaviour
 
         while (elapsedTime < sidewaysTime)
         {
-            transform.Translate(sidewaysDirection * sidewaysSpeed * Time.deltaTime, Space.World);
+            Vector3 movement = sidewaysDirection * sidewaysSpeed * Time.deltaTime;
+            rb.MovePosition(rb.position + movement);
             elapsedTime += Time.deltaTime;
             yield return null;
         }

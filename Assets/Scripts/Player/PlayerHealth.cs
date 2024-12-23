@@ -21,8 +21,9 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     public void TakeDamage(int damage)
     {
-        CameraShakeTrigger.Instance.TriggerShake(new Vector3(.2f, .2f, .2f));
+        CameraShakeTrigger.Instance.TriggerShake(new Vector3(.1f, 0, .1f));
         currentHealth -= damage;
+        playerUI.UpdateHealthCount(currentHealth);
         Debug.Log("Player took " + damage + " damage. Current health: " + currentHealth);
 
         if (currentHealth <= 0)
