@@ -38,7 +38,7 @@ public class EnemyMove : MonoBehaviour
 
     void Hover()
     {
-        Ray ray = new Ray(new Vector3(transform.position.x + 2f, transform.position.y + 2f, transform.position.z), -transform.up);
+        Ray ray = new Ray(new Vector3(transform.position.x + 2f, transform.position.y, transform.position.z), -transform.up);
         int layerMask = LayerMask.GetMask("Ground");
 
         Debug.DrawRay(ray.origin, ray.direction * 100f, Color.red);
